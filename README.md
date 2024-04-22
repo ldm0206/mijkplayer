@@ -67,7 +67,7 @@ IJK_OPENSSL_COMMIT=OpenSSL_1_1_1w
 3.5 在编译Android arm64的 ffmpeg时会报一个 ff_tx_codelet_list_float_x86 undefined的错误，这个应该是需要屏蔽不同abi耦合的，没有细究，不清楚ffmpeg编译为啥会出这问题，我的做法简单粗暴，直接在对应的源文件里添加一个对空函数体的对应函数名；
 
 
-4.参照[本](https://github.com/1976222027/mijkplayer.git)项目作者的共享版本以及https://github.com/ShikinChen/ijkplayer-android 作者的静态库版本修改适配的ffmpeg6.1。
+4.参照https://github.com/1976222027/mijkplayer.git 项目作者的共享版本以及https://github.com/ShikinChen/ijkplayer-android 作者的静态库版本修改适配的ffmpeg6.1。
 
 
 虽然ijk官方好久没更新了，希望大家群策群力，相互帮助，把ijk盘起来！若有需要，可以站内联系，或者建一个维护群。
