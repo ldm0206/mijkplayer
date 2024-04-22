@@ -48,8 +48,7 @@ const short _scanOffsets[5][24]={
 /home/cp/androidsoft/mijkplayer/android
 
 1.升级了opennssl：
-IJK_OPENSSL_UPSTREAM=https://github.com/Bilibili/openssl.git
-IJK_OPENSSL_FORK=https://gitee.com/mirrors/openssl.git
+
 IJK_OPENSSL_COMMIT=OpenSSL_1_1_1w
 
 2.ndk使用ndk21，会报找不到xxx-ar、xxx-runlib等ndk'编译脚本找不到，直接去ndk目录找对应的llvm脚本复制改文件名即可；也可以使用更高的版本，但是高版本llvm编译，需要大量修改编译脚本，本着能编译将就使用原则，没去尝试；
