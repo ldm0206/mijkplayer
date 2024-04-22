@@ -1,3 +1,72 @@
+
+耗时一个多星期终于基于这个版本一通修改编译出来了。目前主要是编译的Android arm64的
+[arm64-v8a] Compile : ijkj4a <= j4a_base.c
+[arm64-v8a] Compile : ijkj4a <= AudioTrack.c
+[arm64-v8a] Compile : ijkj4a <= MediaCodec.c
+[arm64-v8a] Compile : ijkj4a <= PlaybackParams.c
+[arm64-v8a] Compile : ijkj4a <= MediaFormat.c
+[arm64-v8a] Compile : ijkj4a <= Build.c
+[arm64-v8a] Compile : ijkj4a <= Buffer.c
+[arm64-v8a] Compile : ijkj4a <= ByteBuffer.c
+[arm64-v8a] Compile : ijkj4a <= Bundle.c
+[arm64-v8a] Compile : ijkj4a <= ArrayList.c
+[arm64-v8a] Compile : ijkj4a <= IMediaDataSource.c
+[arm64-v8a] Compile : ijkj4a <= IAndroidIO.c
+[arm64-v8a] Compile : ijkj4a <= AudioTrack.util.c
+[arm64-v8a] Compile : ijkj4a <= ByteBuffer.util.c
+[arm64-v8a] Compile : android-ndk-profiler <= prof.c
+[arm64-v8a] Compile : ijkj4a <= IjkMediaPlayer.c
+[arm64-v8a] Compile++ : ijksoundtouch <= AAFilter.cpp
+[arm64-v8a] Compile++ : ijksoundtouch <= FIFOSampleBuffer.cpp
+[arm64-v8a] Compile++ : ijksoundtouch <= cpu_detect_x86.cpp
+[arm64-v8a] Compile++ : ijksoundtouch <= sse_optimized.cpp
+[arm64-v8a] Compile++ : ijksoundtouch <= FIRFilter.cpp
+[arm64-v8a] Compile++ : ijksoundtouch <= RateTransposer.cpp
+[arm64-v8a] Compile++ : ijksoundtouch <= InterpolateCubic.cpp
+[arm64-v8a] Compile++ : ijksoundtouch <= InterpolateShannon.cpp
+[arm64-v8a] Compile++ : ijksoundtouch <= InterpolateLinear.cpp
+[arm64-v8a] Compile++ : ijksoundtouch <= BPMDetect.cpp
+[arm64-v8a] Compile++ : ijksoundtouch <= TDStretch.cpp
+/home/cp/androidsoft/mijkplayer/android/ijkplayer/ijkplayer-arm64/src/main/jni/ijkmedia/ijksoundtouch/source/SoundTouch/TDStretch.cpp:66:13: warning: unused variable '_scanOffsets' [-Wunused-const-variable]
+const short _scanOffsets[5][24]={
+^
+1 warning generated.
+[arm64-v8a] Compile++ : ijksoundtouch <= PeakFinder.cpp
+[arm64-v8a] Compile++ : ijksoundtouch <= mmx_optimized.cpp
+[arm64-v8a] Compile++ : ijksoundtouch <= SoundTouch.cpp
+[arm64-v8a] StaticLibrary : libcpufeatures.a
+[arm64-v8a] StaticLibrary : libyuv_static.a
+[arm64-v8a] Compile++ : ijksoundtouch <= ijksoundtouch_wrap.cpp
+[arm64-v8a] StaticLibrary : libijkj4a.a
+[arm64-v8a] StaticLibrary : libijksoundtouch.a
+[arm64-v8a] StaticLibrary : libandroid-ndk-profiler.a
+[arm64-v8a] SharedLibrary : libijksdl.so
+[arm64-v8a] Install : libijksdl.so => libs/arm64-v8a/libijksdl.so
+[arm64-v8a] SharedLibrary : libijkplayer.so
+[arm64-v8a] Install : libijkplayer.so => libs/arm64-v8a/libijkplayer.so
+/home/cp/androidsoft/mijkplayer/android
+
+1.升级了opennssl：
+IJK_OPENSSL_UPSTREAM=https://github.com/Bilibili/openssl.git
+IJK_OPENSSL_FORK=https://gitee.com/mirrors/openssl.git
+IJK_OPENSSL_COMMIT=OpenSSL_1_1_1w
+
+ndk使用ndk21，会报找不到xxx-ar、xxx-runlib等ndk'编译脚本找不到，直接去ndk目录找对应的llvm脚本复制改文件名即可；也可以使用更高的版本，但是高版本llvm编译，需要大量修改编译脚本，本着能编译将就使用原则，没去尝试；
+3.ijkplayer在sh compile-ijk.sh arm64 编译时会报错，ijkplayer里面的c代码和makefile都需要修改：
+3.1其中一个注册协议解析的报错需要修改 ffmpeg6.1的源代码，参照这个 https://github.com/bilibili/ijkplayer/issues/3350；
+3.2 ffmpeg6.1 接口有一些变更，需要同步修改 android\ijkplayer\ijkplayer-arm64\src\main\jni 源代码；
+3.3 APP_STL := stlport_static 高版本ndk已废弃，需要修改APP_STL := c++_static；
+3.4 在 mijkplayer/android/ijkplayer/ijkplayer-arm64/src/main/jni/ijkmedia/ijkplayer目录下的makefile文件的这个标记不能使用： LOCAL_CFLAGS += -std=c99；会报 error: invalid argument '-std=c99' not allowed with 'C++' 错误，因为mijkplayer/android/ijkplayer/ijkplayer-arm64/src/main/jni/ijkmedia/ijkplayer/ijkavutil/ijkstl.cpp 这个是c++语法文件，若有c99标记，编译器编译时无法兼容成c的语法。
+3.5 在编译Android arm64的 ffmpeg时会报一个 ff_tx_codelet_list_float_x86 undefined的错误，这个应该是需要屏蔽不同abi耦合的，没有细究，不清楚ffmpeg编译为啥会出这问题，我的做法简单粗暴，直接在对应的源文件里添加一个对空函数体的对应函数名；
+
+4.参照[本](https://github.com/1976222027/mijkplayer.git)项目作者的共享版本以及https://github.com/ShikinChen/ijkplayer-android 作者的静态库版本修改适配的ffmpeg6.1。
+
+虽然ijk官方好久没更新了，希望大家群策群力，相互帮助，把ijk盘起来！若有需要，可以站内联系，或者建一个维护群。
+另外，上面几楼的问题，在这里统一答复一下：修改ffmpeg的配置后，需要删除对应的abi目录下的config.h,这个就是根据脚本配置文件动态生成的控制ffmpeg里面相关所有子功能的c代码配置文件，每次改配置脚本需要重新生成；
+
+
+
+
 # ijkplayer
 
  Platform | Build Guide
