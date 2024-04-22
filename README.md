@@ -1,5 +1,6 @@
 
-耗时一个多星期终于基于这个版本一通修改编译出来了。目前主要是编译的Android arm64的
+耗时一个多星期终于基于这个版本一通修改编译出来了。目前主要是编译的Android arm64的。
+
 [arm64-v8a] Compile : ijkj4a <= j4a_base.c
 [arm64-v8a] Compile : ijkj4a <= AudioTrack.c
 [arm64-v8a] Compile : ijkj4a <= MediaCodec.c
