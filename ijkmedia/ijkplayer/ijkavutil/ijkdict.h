@@ -31,6 +31,7 @@
 #define IJKAVUTIL_IJKDICT_H
 
 #include <stdint.h>
+#include <libavformat/avformat.h>
 
 #define IJK_AV_DICT_MATCH_CASE      1   /**< Only get an entry with exact-case key match. Only relevant in av_dict_get(). */
 #define IJK_AV_DICT_IGNORE_SUFFIX   2   /**< Return first entry in a dictionary whose first part corresponds to the search key,
@@ -125,6 +126,10 @@ int ijk_av_dict_copy(IjkAVDictionary **dst, const IjkAVDictionary *src, int flag
  */
 void ijk_av_dict_free(IjkAVDictionary **m);
 
+int av_dict_set_intptr(AVDictionary **pm, const char *key, uintptr_t value, int flags);
+uintptr_t av_dict_get_intptr(const AVDictionary *m, const char* key);
+uintptr_t av_dict_strtoptr(char * value);
+char * av_dict_ptrtostr(uintptr_t value);
 
 /**
  * @}

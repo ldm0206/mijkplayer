@@ -80,7 +80,7 @@ if [ "$FF_ARCH" = "armv7a" ]; then
     FF_BUILD_NAME_OPENSSL=openssl-armv7a
     FF_BUILD_NAME_LIBSOXR=libsoxr-armv7a
     FF_SOURCE=$FF_BUILD_ROOT/$FF_BUILD_NAME
-
+    FF_ANDROID_PLATFORM=android-16
     FF_CROSS_PREFIX=arm-linux-androideabi
     FF_TOOLCHAIN_NAME=${FF_CROSS_PREFIX}-${FF_GCC_VER}
 
@@ -281,6 +281,8 @@ echo ""
 echo "--------------------"
 echo "[*] configurate ffmpeg"
 echo "--------------------"
+
+# Common prefix for ld, as, etc.
 cd $FF_SOURCE
 if [ -f "./config.h" ]; then
     echo 'reuse configure'

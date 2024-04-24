@@ -39,12 +39,15 @@
         ijkav_register_##x##_protocol(&ijkimp_ff_##x##_protocol, sizeof(URLProtocol));  \
     }
 
+
+
+
 static struct AVInputFormat *ijkav_find_input_format(const char *iformat_name)
 {
     AVInputFormat *fmt = NULL;
     if (!iformat_name)
         return NULL;
-    while ((fmt = av_iformat_next(fmt))) {
+    while ((fmt = av_demuxer_iterate(fmt))) {
         if (!fmt->name)
             continue;
         if (!strcmp(iformat_name, fmt->name))
@@ -59,7 +62,7 @@ static void ijkav_register_input_format(AVInputFormat *iformat)
         av_log(NULL, AV_LOG_WARNING, "skip     demuxer : %s (duplicated)\n", iformat->name);
     } else {
         av_log(NULL, AV_LOG_INFO,    "register demuxer : %s\n", iformat->name);
-        av_register_input_format(iformat);
+        //av_register_input_format(iformat);
     }
 }
 
@@ -72,21 +75,30 @@ void ijkav_register_all(void)
         return;
     initialized = 1;
 
-    av_register_all();
+    //av_register_all();
 
     /* protocols */
     av_log(NULL, AV_LOG_INFO, "===== custom modules begin =====\n");
 #ifdef __ANDROID__
     IJK_REGISTER_PROTOCOL(ijkmediadatasource);
+ 
 #endif
     IJK_REGISTER_PROTOCOL(ijkio);
+
     IJK_REGISTER_PROTOCOL(async);
+
     IJK_REGISTER_PROTOCOL(ijklongurl);
+ 
     IJK_REGISTER_PROTOCOL(ijktcphook);
+
     IJK_REGISTER_PROTOCOL(ijkhttphook);
+ 
     IJK_REGISTER_PROTOCOL(ijksegment);
+ 
     /* demuxers */
     IJK_REGISTER_DEMUXER(ijklivehook);
+ 
     IJK_REGISTER_DEMUXER(ijklas);
+
     av_log(NULL, AV_LOG_INFO, "===== custom modules end =====\n");
 }

@@ -18,7 +18,10 @@
  * License along with ijkPlayer; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-
+#include <inttypes.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <assert.h>
 #include "ijkiourl.h"
 #include "ijkioprotocol.h"
