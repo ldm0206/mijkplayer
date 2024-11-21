@@ -33,14 +33,14 @@ FF_BUILD_OPT=$2
 echo "FF_ARCH=$FF_ARCH"
 echo "FF_BUILD_OPT=$FF_BUILD_OPT"
 if [ -z "$FF_ARCH" ]; then
-    echo "You must specific an architecture 'arm64, armv7a, x86, ...'."
+    echo "You must specific an architecture 'arm64, armv7a, x86, x86_64, ...'."
     echo ""
     exit 1
 fi
 
 
 FF_BUILD_ROOT=`pwd`
-FF_ANDROID_PLATFORM=android-9
+FF_ANDROID_PLATFORM=android-16
 
 
 FF_BUILD_NAME=
@@ -81,6 +81,7 @@ if [ "$FF_ARCH" = "armv7a" ]; then
     FF_BUILD_NAME_LIBSOXR=libsoxr-armv7a
     FF_SOURCE=$FF_BUILD_ROOT/$FF_BUILD_NAME
 
+    FF_ANDROID_PLATFORM=android-16
     FF_CROSS_PREFIX=arm-linux-androideabi
     FF_TOOLCHAIN_NAME=${FF_CROSS_PREFIX}-${FF_GCC_VER}
 
@@ -99,6 +100,7 @@ elif [ "$FF_ARCH" = "x86" ]; then
     FF_BUILD_NAME_LIBSOXR=libsoxr-x86
     FF_SOURCE=$FF_BUILD_ROOT/$FF_BUILD_NAME
 
+    FF_ANDROID_PLATFORM=android-16
     FF_CROSS_PREFIX=i686-linux-android
     FF_TOOLCHAIN_NAME=x86-${FF_GCC_VER}
 
@@ -233,7 +235,8 @@ if [ -f "${FF_DEP_OPENSSL_LIB}/libssl.a" ]; then
     FF_CFLAGS="$FF_CFLAGS -I${FF_DEP_OPENSSL_INC}"
     FF_DEP_LIBS="$FF_DEP_LIBS -L${FF_DEP_OPENSSL_LIB} -lssl -lcrypto"
 fi
-
+#--------------------
+# with libsoxr
 if [ -f "${FF_DEP_LIBSOXR_LIB}/libsoxr.a" ]; then
     echo "libsoxr detected"
     FF_CFG_FLAGS="$FF_CFG_FLAGS --enable-libsoxr"
@@ -300,6 +303,7 @@ echo "--------------------"
 cp config.* $FF_PREFIX
 make $FF_MAKE_FLAGS > /dev/null
 make install
+# 合并so
 mkdir -p $FF_PREFIX/include/libffmpeg
 cp -f config.h $FF_PREFIX/include/libffmpeg/config.h
 

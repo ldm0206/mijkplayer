@@ -1,4 +1,5 @@
 # ijkplayer
+fork ijkplayer
 
  Platform | Build Guide
  -------- | ------------
@@ -7,33 +8,23 @@
 
 Video player based on [ffplay](http://ffmpeg.org)
 
-### Download
 
-- Android:
- - Gradle
-```
-# required
-allprojects {
-    repositories {
-        maven {url 'https://jitpack.io'}
-    }
-}
+#### issues
+https://github.com/Bilibili/ijkplayer/issues/4569
+解决方案有两种：
+1。创建AudioTrack是，bufferSizeInBytes参数设置为4*minBufferSize，可能会导致音频延迟增加一倍
+2。走软的加速，即soundtouch，可能会增加性能消耗  必须执行init-android-soundtouch.sh，重新编译ijkplayer
+ijkplayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1)
+这个设置要放在 prepareAsync()之前设置 紧接着 prepareAsync()这个之前设置就行了
+我之前是在new IjkMediaPlayer() 之后设置 一直不起作用 后来改了之后 就ok了
+正如jiaobinbin同学说的那样，需要在prepareAsync之前设置就能生效，如果对象new出来以后你又调用了reset函数，
+那么久会把这个soundtouch属性干掉了，所以在prepareAsync之前再设置就好了，已经解决了米8上的这个问题
+感觉这是小米的一个bug。
 
-dependencies {
-    # required, enough for most devices.
-    compile 'com.gitee.mahongyin:ijkplayer-java:0.1.0'
-    compile 'com.gitee.mahongyin:ijkplayer-armv7a:0.1.0'
+ffmpeg 完全使用了ShikinChen的ff6.1， 改编译脚本修参考focuseyes360
+感谢：[focuseyes360](https://github.com/focuseyes360)、[ShikinChen](https://github.com/ShikinChen/FFmpeg)
 
-    # Other ABIs: optional
-    compile 'com.gitee.mahongyin:ijkplayer-arm64:0.1.0'
-    compile 'com.gitee.mahongyin:ijkplayer-x86:0.1.0'
-    compile 'com.gitee.mahongyin:ijkplayer-x86_64:0.1.0'
 
-    # ExoPlayer as IMediaPlayer: optional, experimental
-    compile 'com.gitee.mahongyin:ijkplayer-exo:0.1.0'
-    compile 'com.gitee.mahongyin:ijkplayer-exo2:0.1.0'
-}
-```
 
 ### My Build Environment
 - Common
@@ -58,7 +49,7 @@ dependencies {
  - workaround for some buggy online video.
  - 一些有问题的在线视频的解决方法。
 - Android
- - platform: API 16~34
+ - platform: API 16~34  64位是最低21  21~34
  - 平台：API 16~34
  - cpu: ARMv7a, ARM64v8a, x86 x86_64
  - api: [MediaPlayer-like](android/ijkplayer/ijkplayer-java/src/main/java/tv/danmaku/ijk/media/player/IMediaPlayer.java)
@@ -71,18 +62,23 @@ dependencies {
  - alternative-backend: android.media.MediaPlayer, ExoPlayer
  - 替代后端：android.media.MediaPlayer、ExoPlayer
 - iOS
- - platform: iOS 7.0~17.x
- - iOS - 平台：iOS 7.0~17.x
- - cpu: armv7, arm64, i386, x86_64, (armv7s is obselete)
+ - platform: iOS 9.0~17.x
+ - iOS - 平台：iOS 9.0~17.x
+ - cpu: arm64, i386, x86_64, (armv7s is obselete)
  - api: [MediaPlayer.framework-like](ios/IJKMediaPlayer/IJKMediaPlayer/IJKMediaPlayback.h)
  - video-output: OpenGL ES 2.0
  - audio-output: AudioQueue, AudioUnit
  - hw-decoder: VideoToolbox (iOS 8+)
  - alternative-backend: AVFoundation.Framework.AVPlayer, MediaPlayer.Framework.MPMoviePlayerControlelr (obselete since iOS 8)
-    - cpu ：armv7、arm64、i386、x86_64、（armv7s 已过时） - api：[MediaPlayer.framework-like](iosIJKMediaPlayerIJKMediaPlayerIJKMediaPlayback.h) - 视频输出：OpenGL ES 2.0 - 音频输出：AudioQueue、AudioUnit - 硬件解码器： VideoToolbox (iOS 8+) - 替代后端：AVFoundation.Framework.AVPlayer、MediaPlayer.Framework.MPMoviePlayerControlelr（自 iOS 8 起已废弃）
+ - cpu ：arm64、i386、x86_64 
+ - api：[MediaPlayer.framework-like](iosIJKMediaPlayerIJKMediaPlayerIJKMediaPlayback.h) 
+ - 视频输出：OpenGL ES 2.0 
+ - 音频输出：AudioQueue、AudioUnit 
+ - 硬件解码器： VideoToolbox (iOS 8+) 
+ - 替代后端：AVFoundation.Framework.AVPlayer、MediaPlayer.Framework.MPMoviePlayerControlelr（自 iOS 8 起已废弃）
 ### NOT-ON-PLAN
-- obsolete platforms (Android: API-8 and below; iOS: pre-6.0)
-- obsolete cpu: ARMv5, ARMv6, MIPS (I don't even have these types of devices…)
+- obsolete platforms (Android: API-15 and below; iOS: pre-8.0)
+- obsolete cpu: ARMv5, ARMv6, ARMv7, MIPS (I don't even have these types of devices…)
 - native subtitle render
 - avfilter support
 
