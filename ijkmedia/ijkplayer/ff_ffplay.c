@@ -335,17 +335,17 @@ static int packet_queue_get(PacketQueue *q, AVPacket *pkt, int block, int *seria
 
 static int packet_queue_get_or_buffering(FFPlayer *ffp, PacketQueue *q, AVPacket *pkt, int *serial, int *finished)
 {
-    assert(finished);
-    if (!ffp->packet_buffering)
-        return packet_queue_get(q, pkt, 1, serial);
+    // assert(finished);
+    // if (!ffp->packet_buffering)
+    //     return packet_queue_get(q, pkt, 1, serial);
 
     while (1) {
         int new_packet = packet_queue_get(q, pkt, 0, serial);
         if (new_packet < 0)
             return -1;
         else if (new_packet == 0) {
-            if (q->is_buffer_indicator && !*finished)
-                ffp_toggle_buffering(ffp, 1);
+            // if (q->is_buffer_indicator && !*finished)
+            //     ffp_toggle_buffering(ffp, 1);
             new_packet = packet_queue_get(q, pkt, 1, serial);
             if (new_packet < 0)
                 return -1;
