@@ -20,7 +20,7 @@
  * License along with ijkPlayer; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-
+#include "libavcodec/bsf.h"
 #include "ffpipenode_android_mediacodec_vdec.h"
 #include "ijksdl/android/ijksdl_android_jni.h"
 #include "ijksdl/android/ijksdl_codec_android_mediaformat_java.h"
@@ -79,7 +79,7 @@ typedef struct IJKFF_Pipenode_Opaque {
 
     AVCodecContext           *avctx; // not own
     AVCodecParameters        *codecpar;
-    AVBitStreamFilterContext *bsfc;  // own
+    AVBSFContext *bsfc;  // own
 
 #if AMC_USE_AVBITSTREAM_FILTER
     uint8_t                  *orig_extradata;
@@ -506,7 +506,7 @@ static int feed_input_buffer2(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs,
                 d->next_pts_tb = d->start_pts_tb;
             }
         } while (ffp_is_flush_packet(&pkt) || d->queue->serial != d->pkt_serial);
-        av_packet_split_side_data(&pkt);
+        //av_packet_split_side_data(&pkt);
         av_packet_unref(&d->pkt);
         d->pkt_temp = d->pkt = pkt;
         d->packet_pending = 1;
@@ -547,7 +547,13 @@ static int feed_input_buffer2(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs,
                     return change_ret;
                 }
 
-                change_ret = avcodec_decode_video2(new_avctx, frame, &got_picture, avpkt);
+                change_ret = avcodec_send_frame(new_avctx, frame);
+                while (change_ret >= 0) {
+                    change_ret = avcodec_receive_packet(new_avctx, avpkt);
+                    if (change_ret == AVERROR(EAGAIN) || ret == AVERROR_EOF || change_ret < 0) {
+                        break;
+                    }
+                }
                 if (change_ret < 0) {
                     avcodec_free_context(&new_avctx);
                     return change_ret;
@@ -754,7 +760,7 @@ static int feed_input_buffer(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, 
                 d->next_pts_tb = d->start_pts_tb;
             }
         } while (ffp_is_flush_packet(&pkt) || d->queue->serial != d->pkt_serial);
-        av_packet_split_side_data(&pkt);
+        //av_packet_split_side_data(&pkt);
         av_packet_unref(&d->pkt);
         d->pkt_temp = d->pkt = pkt;
         d->packet_pending = 1;
@@ -794,7 +800,14 @@ static int feed_input_buffer(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeUs, 
                     return change_ret;
                 }
 
-                change_ret = avcodec_decode_video2(new_avctx, frame, &got_picture, avpkt);
+                //change_ret = avcodec_decode_video2(new_avctx, frame, &got_picture, avpkt);
+                change_ret = avcodec_send_frame(new_avctx, frame);
+                while (change_ret >= 0) {
+                    change_ret = avcodec_receive_packet(new_avctx, avpkt);
+                    if (change_ret == AVERROR(EAGAIN) || ret == AVERROR_EOF || change_ret < 0) {
+                        break;
+                    }
+                }
                 if (change_ret < 0) {
                     avcodec_free_context(&new_avctx);
                     return change_ret;
@@ -1499,7 +1512,7 @@ static int drain_output_buffer2(JNIEnv *env, IJKFF_Pipenode *node, int64_t timeU
                 }
             }
         }
-        ret = ffp_queue_picture(ffp, frame, pts, duration, av_frame_get_pkt_pos(frame), is->viddec.pkt_serial);
+        ret = ffp_queue_picture(ffp, frame, pts, duration, frame->pkt_pos, is->viddec.pkt_serial);
         if (ret) {
             if (frame->opaque)
                 SDL_VoutAndroid_releaseBufferProxyP(opaque->weak_vout, (SDL_AMediaCodecBufferProxy **)&frame->opaque, false);
@@ -1640,7 +1653,7 @@ static int func_run_sync(IJKFF_Pipenode *node)
                     }
                 }
             }
-            ret = ffp_queue_picture(ffp, frame, pts, duration, av_frame_get_pkt_pos(frame), is->viddec.pkt_serial);
+            ret = ffp_queue_picture(ffp, frame, pts, duration, frame->pkt_pos, is->viddec.pkt_serial);
             if (ret) {
                 if (frame->opaque)
                     SDL_VoutAndroid_releaseBufferProxyP(opaque->weak_vout, (SDL_AMediaCodecBufferProxy **)&frame->opaque, false);
