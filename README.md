@@ -1,4 +1,8 @@
-# ijkplayer
+# build for mytv-android
+
+run: https://colab.research.google.com/drive/1K6wmfQ1wj4pkr5Zmbti4nUspVrC-VUEW?usp=sharing
+
+# 原介绍
 fork ijkplayer
 
  Platform | Build Guide
