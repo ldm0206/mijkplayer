@@ -29,7 +29,7 @@ CC=
 CXX=
 OPTIMIZE_CFLAGS=
 
-TOOLCHAIN=/home/mahongyin/Android/Sdk/ndk/23.2.8568313/toolchains/llvm/prebuilt/linux-x86_64
+TOOLCHAIN=/content/Android/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64
 SYSROOT=$TOOLCHAIN/sysroot
 # 附属于ldflags，用于启用libsoxr\openssl拼接参数
 FF_DEP_LIBS=
