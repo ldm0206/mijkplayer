@@ -92,8 +92,8 @@ case "$FF_TARGET" in
             if [ -d ffmpeg-$ARCH ]; then
                 cd ffmpeg-$ARCH && git clean -xdf && cd -
             fi
-            cp /home/cp/androidsoft/mijkplayer/extra/ffmpeg/libavutil/application.h  /home/cp/androidsoft/mijkplayer/android/contrib/ffmpeg-$ARCH/libavutil/application.h 
-            cp /home/cp/androidsoft/mijkplayer/extra/ffmpeg/libavutil/application.c /home/cp/androidsoft/mijkplayer/android/contrib/ffmpeg-$ARCH/libavutil/application.c 
+            cp ../../extra/ffmpeg/libavutil/application.h  ./contrib/ffmpeg-$ARCH/libavutil/application.h 
+            cp ../../extra/ffmpeg/libavutil/application.c ./contrib/ffmpeg-$ARCH/libavutil/application.c 
         done
         rm -rf ./build/ffmpeg-*
     ;;
