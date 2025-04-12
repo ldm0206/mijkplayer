@@ -14,7 +14,7 @@ fi
 API_LEVEL=
 TARGET_HOST=
 TARGET_ABI=
-FF_ACT_ARCHS_ALL="armv7a arm64 x86 x86_64"
+FF_ACT_ARCHS_ALL="armv7a arm64"
 case "$FF_TARGET" in
     armv7a)
 	API_LEVEL=16
