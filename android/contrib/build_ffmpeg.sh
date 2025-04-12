@@ -81,8 +81,8 @@ armv7a)
     CPU=armv7-a
     ARCH=arm
     API=16
-    CROSS_PREFIX=$TOOLCHAIN/bin/armv7a-linux-androideabi
-    CC=${CROSS_PREFIX}$API-clang
+    CROSS_PREFIX=$TOOLCHAIN/bin/arm-linux-androideabi
+    CC=$TOOLCHAIN/bin/armv7a-linux-androideabi$API-clang
     CXX=CC=${CROSS_PREFIX}$API-clang++
     OPTIMIZE_CFLAGS="-march=$CPU"
     #build_start
