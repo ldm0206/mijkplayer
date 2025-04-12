@@ -81,9 +81,9 @@ armv7a)
     CPU=armv7-a
     ARCH=arm
     API=16
-    CROSS_PREFIX=$TOOLCHAIN/bin/armv7a-linux-androideabi$API-
-    CC=${CROSS_PREFIX}clang
-    CXX=CC=${CROSS_PREFIX}clang++
+    CROSS_PREFIX=$TOOLCHAIN/bin/armv7a-linux-androideabi
+    CC=${CROSS_PREFIX}$API-clang
+    CXX=CC=${CROSS_PREFIX}$API-clang++
     OPTIMIZE_CFLAGS="-march=$CPU"
     #build_start
 
@@ -97,9 +97,10 @@ arm64)
     CPU=armv8-a
     ARCH=arm64
     API=21
-    CROSS_PREFIX=$TOOLCHAIN/bin/aarch64-linux-android$API-
-    CC=${CROSS_PREFIX}clang
-    CXX=CC=${CROSS_PREFIX}clang++
+    CROSS_PREFIX=$TOOLCHAIN/bin/aarch64-linux-android 
+    #$API-
+    CC=${CROSS_PREFIX}$API-clang
+    CXX=CC=${CROSS_PREFIX}$API-clang++
     OPTIMIZE_CFLAGS="-march=$CPU"
     #build_start
     ;;
@@ -112,9 +113,10 @@ x86)
     CPU=x86
     ARCH=x86
     API=16
-    CROSS_PREFIX=$TOOLCHAIN/bin/i686-linux-android$API-
-    CC=${CROSS_PREFIX}clang
-    CXX=CC=${CROSS_PREFIX}clang++
+    CROSS_PREFIX=$TOOLCHAIN/bin/i686-linux-android 
+    #$API-
+    CC=${CROSS_PREFIX}$API-clang
+    CXX=CC=${CROSS_PREFIX}$API-clang++
     OPTIMIZE_CFLAGS="-march=i686"
     ADDITIONAL_CONFIGURE_FLAG=--disable-asm
     #build_start
@@ -128,7 +130,7 @@ x86_64)
     CPU=x86-64
     ARCH=x86_64
     API=21
-    CROSS_PREFIX=$TOOLCHAIN/bin/x86_64-linux-android$API-
+    CROSS_PREFIX=$TOOLCHAIN/bin/x86_64-linux-android
     CC=${CROSS_PREFIX}clang
     CXX=CC=${CROSS_PREFIX}clang++
     OPTIMIZE_CFLAGS="-march=$CPU"
@@ -152,6 +154,7 @@ check)
     ;;
 esac
 
+CROSS_PREFIX = $CROSS_PREFIX-
 #----------
 # ijkffmpeg公共配置
 export COMMON_FF_CFG_FLAGS=
