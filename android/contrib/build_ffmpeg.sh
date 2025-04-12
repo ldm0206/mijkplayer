@@ -154,7 +154,7 @@ check)
     ;;
 esac
 
-CROSS_PREFIX = $CROSS_PREFIX-
+CROSS_PREFIX=${CROSS_PREFIX}-
 #----------
 # ijkffmpeg公共配置
 export COMMON_FF_CFG_FLAGS=

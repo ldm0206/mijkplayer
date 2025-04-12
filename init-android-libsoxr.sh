@@ -33,7 +33,6 @@ function pull_fork()
 {
     echo "== pull soxr fork $1 =="
     sh $TOOLS/pull-repo-ref.sh $IJK_LIBSOXR_FORK android/contrib/libsoxr-$1 ${IJK_LIBSOXR_LOCAL_REPO}
-    cp extra/android-cmake/android.toolchain.cmake android/contrib/libsoxr-$1
     cd android/contrib/libsoxr-$1
     case "$1" in
         arm64|x86_64)
@@ -44,6 +43,7 @@ function pull_fork()
             ;;
     esac
     cd -
+    cp extra/android-cmake/android.toolchain.cmake android/contrib/libsoxr-$1
 }
 
 function pull_android_toolchain_cmake()
