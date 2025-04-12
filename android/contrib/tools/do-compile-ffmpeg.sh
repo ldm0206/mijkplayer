@@ -21,7 +21,7 @@
 
 #--------------------
 echo "===================="
-echo "[*] check env $1"
+echo "[*] do check env $1"
 echo "===================="
 set -e
 
@@ -41,6 +41,9 @@ fi
 
 FF_BUILD_ROOT=`pwd`
 FF_ANDROID_PLATFORM=android-16
+
+TOOLCHAIN=/content/Android/ndk/21.4.7075529/toolchains/llvm/prebuilt/linux-x86_64
+SYSROOT=$TOOLCHAIN/sysroot
 
 
 FF_BUILD_NAME=
@@ -65,7 +68,7 @@ FF_ASSEMBLER_SUB_DIRS=
 #--------------------
 echo ""
 echo "--------------------"
-echo "[*] make NDK standalone toolchain"
+echo "[*] do make NDK standalone toolchain"
 echo "--------------------"
 . ./tools/do-detect-env.sh
 FF_MAKE_TOOLCHAIN_FLAGS=$IJK_MAKE_TOOLCHAIN_FLAGS
@@ -196,7 +199,7 @@ fi
 #--------------------
 echo ""
 echo "--------------------"
-echo "[*] check ffmpeg env"
+echo "[*] do check ffmpeg env"
 echo "--------------------"
 export PATH=$FF_TOOLCHAIN_PATH/bin/:$PATH
 #export CC="ccache ${FF_CROSS_PREFIX}-gcc"
@@ -282,7 +285,7 @@ esac
 #--------------------
 echo ""
 echo "--------------------"
-echo "[*] configurate ffmpeg"
+echo "[*] do configurate ffmpeg"
 echo "--------------------"
 cd $FF_SOURCE
 if [ -f "./config.h" ]; then
@@ -290,6 +293,7 @@ if [ -f "./config.h" ]; then
 else
     which $CC
     ./configure $FF_CFG_FLAGS \
+        --sysroot=$SYSROOT \
         --extra-cflags="$FF_CFLAGS $FF_EXTRA_CFLAGS" \
         --extra-ldflags="$FF_DEP_LIBS $FF_EXTRA_LDFLAGS"
     make clean
@@ -298,7 +302,7 @@ fi
 #--------------------
 echo ""
 echo "--------------------"
-echo "[*] compile ffmpeg"
+echo "[*] do compile ffmpeg"
 echo "--------------------"
 cp config.* $FF_PREFIX
 make $FF_MAKE_FLAGS > /dev/null
@@ -310,7 +314,7 @@ cp -f config.h $FF_PREFIX/include/libffmpeg/config.h
 #--------------------
 echo ""
 echo "--------------------"
-echo "[*] link ffmpeg"
+echo "[*] do link ffmpeg"
 echo "--------------------"
 echo $FF_EXTRA_LDFLAGS
 
@@ -352,7 +356,7 @@ mysedi() {
 
 echo ""
 echo "--------------------"
-echo "[*] create files for shared ffmpeg"
+echo "[*] do create files for shared ffmpeg"
 echo "--------------------"
 rm -rf $FF_PREFIX/shared
 mkdir -p $FF_PREFIX/shared/lib/pkgconfig
