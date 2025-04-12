@@ -38,7 +38,7 @@ FF_DEP_LIBS=
 FF_MODULE_DIRS="compat libavcodec libavfilter libavformat libavutil libswresample libswscale"
 FF_ASSEMBLER_SUB_DIRS=
 #--------------------
-FF_ACT_ARCHS_ALL="armv7a arm64 x86 x86_64"
+FF_ACT_ARCHS_ALL="armv7a arm64"
 #FF_MAKE_TOOLCHAIN_FLAGS="--system=linux-x86_64 --install-dir=$TOOLCHAIN"
 # build目录
 BUILD_DIR=$FF_BUILD_ROOT/build
@@ -242,6 +242,7 @@ if [ -f "./config.h" ]; then
 else
     which $CC
     ./configure $FF_CFG_FLAGS \
+        --target-os=android \
         --arch=$ARCH \
         --cpu=$CPU \
         --cc=$CC \
