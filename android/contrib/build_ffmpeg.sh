@@ -155,6 +155,8 @@ check)
 esac
 
 CROSS_PREFIX=${CROSS_PREFIX}-
+FF_EXTRA_LDFLAGS="$FF_EXTRA_LDFLAGS -landroid -llog"
+FF_DEP_LIBS="$FF_DEP_LIBS -landroid -llog"
 #----------
 # ijkffmpeg公共配置
 export COMMON_FF_CFG_FLAGS=
